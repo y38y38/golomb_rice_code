@@ -48,6 +48,8 @@ always @(posedge clk, negedge reset_n) begin
 				output_enable = 1;
 			end
 		end else begin
+			// 0x4 | 1 & 0x3
+			// 0x5 
 			sum = (1<<k) | (input_data & ((1<<k) - 1));
 			code_length = q + 1 + k;
 			output_enable = bitmask( code_length);	

@@ -24,6 +24,7 @@ void golomb_rice_code(int32_t k, uint32_t val,  uint32_t *sum, int32_t *codeword
 
         *sum = (1 << k) | r;
 		*codeword_length = q + 1+ k;
+		printf("%d %d %d %d\n",k,val, *sum, *codeword_length);
     }
     return;
 }
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
 	int state = 0;
 
 	int k,val,codeword_length,sum;
-	while (time_counter < 12 && !Verilated::gotFinish()) {
+	while (time_counter < 4000 && !Verilated::gotFinish()) {
 		dut->clk = !dut->clk; // Toggle clock
 		if (dut->clk) {
 			fscanf(in, "%d,%d,%d,%d",&k, &val, &sum, &codeword_length);
@@ -77,21 +78,26 @@ int main(int argc, char** argv) {
 		// Evaluate DUT
 		dut->eval();
 		if (dut->clk) {
-			uint32_t sum;
-			int32_t codword_length;
-			golomb_rice_code(dut->k, dut->input_data, &sum, &codword_length);
-			if ((dut->sum != sum) || (dut->CODEWORD_LENGTH != codeword_length)) {
-				printf("q=%d\n",dut->Q);
+//			uint32_t sum;
+//		int32_t codeword_length;
+//		golomb_rice_code(dut->k, dut->input_data, &sum, &codeword_length);
+//			if (k==2) {
+//				printf("q=%d %d %d\n",dut->Q,(dut->sum != sum) , (dut->CODEWORD_LENGTH != codeword_length));
+//				printf("k=%d,input_data=%d sum=%d len=%d %x, sum=%d len=%d\n", 
+//				dut->k, dut->input_data, dut->sum, dut->CODEWORD_LENGTH, dut->output_enable,  sum, codeword_length);
+//			}
+//			if ((dut->sum != sum) || (dut->CODEWORD_LENGTH != codeword_length)) {
+				printf("q=%d %d %d\n",dut->Q,(dut->sum != sum) , (dut->CODEWORD_LENGTH != codeword_length));
 				printf("k=%d,input_data=%d sum=%d len=%d %x, sum=%d len=%d\n", 
 				dut->k, dut->input_data, dut->sum, dut->CODEWORD_LENGTH, dut->output_enable,  sum, codeword_length);
-
-			}
+//				break;
+//			}
 		}
 		tfp->dump(time_counter);  // 波形ダンプ用の記述を追加
 		time_counter++;
-		if (time_counter > 12) {
-			break;
-		}
+//		if (time_counter > 12) {
+//			break;
+//		}
 //		break;
 	}
 
